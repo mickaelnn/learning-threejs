@@ -14,8 +14,26 @@ const scene = new THREE.Scene()
 /**
  * Object
  */
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+// const geometry = new THREE.BoxGeometry(1, 1, 1, 50, 50, 50)
+
+const geometry = new THREE.BufferGeometry()
+
+const count = 500
+
+const positionsArray = new Float32Array(count * 3 * 3)
+
+for (let i = 0; i < count * 3 * 3; i++){
+    positionsArray[i] = (Math.random() - Math.random()) * (Math.random() * Math.random())
+}
+
+const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
+
+geometry.setAttribute('position', positionsAttribute)
+
+const material = new THREE.MeshBasicMaterial({
+    color: 0xff0000,
+    wireframe: true
+})
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
@@ -43,11 +61,9 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('dblclick', () => {
     const fullscreenElement = document.fullscreenElement || document.webkitRequestFullscreenElement
-    if (!fullscreenElement){
-        (canvas.requestFullscreen) ? canvas.requestFullscreen() : canvas.webkitRequestFullscreen()
-    } else {
-        (document.exitFullscreen) ? document.exitFullscreen() : document.webkitExitFullscreen()
-    }
+    const enterFullScreen = (canvas.requestFullscreen) ? canvas.requestFullscreen() : canvas.webkitRequestFullscreen()
+    const exitFullscreen = (document.exitFullscreen) ? document.exitFullscreen() : document.webkitExitFullscreen()
+    (!fullscreenElement) ? enterFullScreen : exitFullscreen
 })
 
 /**
